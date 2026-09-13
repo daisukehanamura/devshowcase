@@ -6,6 +6,10 @@ const toMonths = (ym: string): number => {
   return y * 12 + (m - 1);
 };
 
+/** 今日の "YYYY-MM"。在籍中の経歴を「今日まで」として数えるのに使う。 */
+export const currentYearMonth = (now: Date = new Date()): string =>
+  `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+
 export const formatYearMonth = (ym: string): string => {
   const [y, m] = ym.split("-");
   return `${y}年${Number(m)}月`;
@@ -13,7 +17,7 @@ export const formatYearMonth = (ym: string): string => {
 
 /** 在籍期間を月数で返す。終了月も在籍していた扱いなので +1 する。 */
 export const experienceMonths = (exp: Experience, now: Date = new Date()): number => {
-  const end = exp.endedAt ?? `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+  const end = exp.endedAt ?? currentYearMonth(now);
   return Math.max(0, toMonths(end) - toMonths(exp.startedAt) + 1);
 };
 
@@ -32,7 +36,7 @@ export const formatDuration = (months: number): string => {
  */
 export const totalCareerMonths = (experiences: Experience[], now: Date = new Date()): number => {
   if (experiences.length === 0) return 0;
-  const nowYm = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+  const nowYm = currentYearMonth(now);
 
   const ranges = experiences
     .map((e) => [toMonths(e.startedAt), toMonths(e.endedAt ?? nowYm) + 1] as const)

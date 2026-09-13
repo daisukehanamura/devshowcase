@@ -182,6 +182,14 @@ export const searchCatalog = (query: string, limit = 12): CatalogEntry[] => {
     .map((s) => s.entry);
 };
 
+/**
+ * カタログに無い技術を登録するときの slug。
+ * simple-icons には無いのでロゴは出ないが、登録を止めたくないので受け入れる。
+ * 公開 URL には出ないので、日本語もそのまま通す。
+ */
+export const toCustomSlug = (name: string): string =>
+  name.trim().toLowerCase().replace(/\s+/g, "-");
+
 /** GitHub の language 名など、外から来た文字列をカタログの slug に寄せる。 */
 export const resolveSlug = (name: string): string | null => {
   const n = normalize(name);
